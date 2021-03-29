@@ -3,3 +3,5 @@
 - Read more [Linear Discriminant Analysis – Bit by Bit](https://sebastianraschka.com/Articles/2014_python_lda.html)
 
 ![Show 16 image](lda_1.png)
+
+![Show 16 image](out.png)
