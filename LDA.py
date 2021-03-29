@@ -27,7 +27,7 @@ class LDA:
         self.linear_discriminants = None
         self.eigenvalues = None
 
-    def fit_transform(self, X, y):
+    def fit(self, X, y):
         # STANDARDIZATION OF FEATURE DATA:
         scaled_features = scaling_data(X)
 
@@ -84,6 +84,7 @@ class LDA:
         # out of n_components
         self.linear_discriminants = eigenvectors[0:self.n_components]
 
+    def transform(self, X):
         # FINAL STEP: PROJECT THE DATA ALONG THE  LINEAR DISCRIMINANTS AXES
         # Transforming the samples onto the new subspace
         projected_vectors = np.dot(X, self.linear_discriminants.T)
@@ -136,15 +137,17 @@ def get_data(data):
 
 
 def plot_lda(ld):
+
     x = ld['LD1']
     y = ld['LD2']
     flowers = np.unique(ld['flower'])
 
+    plt.style.use('ggplot')
     fig = plt.figure(figsize=(8, 6))
     ax1 = fig.add_subplot(211)  # add_subplot(nrows, ncols, index, **kwargs)
     ax2 = fig.add_subplot(212)
 
-    markers, colors = ('^', 's', 'o'), ('blue', 'red', 'green')
+    markers, colors = ('^', 's', 'o'), ('navy', 'turquoise', 'darkorange')
     for label, marker, color in zip(flowers, markers, colors):
         ax1.scatter(x[ld['flower'] == label]
                     , y[ld['flower'] == label]
@@ -166,12 +169,12 @@ def plot_lda(ld):
     ax1.set_title('LDA: Iris projection onto the first 2 linear discriminants',  color='darkred')
     ax1.set_xlabel('Linear Discriminants 1', color='blue')
     ax1.set_ylabel('Linear Discriminants 2', color='blue')
-    ax1.grid()
+    #ax1.grid()
 
     ax2.set_title('LDA: linear discriminants 1 projection', color='darkred')
     ax2.set_xlabel('Linear Discriminants 1', color='blue')
     ax2.set_ylabel('y = 0')
-    ax2.grid()
+    #ax2.grid()
 
     fig.legend(loc='center right',
                fancybox=True,
@@ -190,7 +193,8 @@ if __name__ == '__main__':
     # Project the data onto the 2 primary principal components
     components = 2
     lda = LDA(n_components=components)
-    X_projected = lda.fit_transform(np.array(features), target)
+    lda.fit(np.array(features), target)
+    X_projected = lda.transform(np.array(features))
 
     # print the explained variances
     explained_variance(lda.eigenvalues)
